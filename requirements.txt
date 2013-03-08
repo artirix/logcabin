@@ -1,0 +1,8 @@
+pyyaml
+gevent == 0.13.8
+pyzmq == 2.2.0.1
+nose
+mock
+boto
+pymongo
+python-dateutil
