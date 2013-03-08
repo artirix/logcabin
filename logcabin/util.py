@@ -1,7 +1,5 @@
-import yaml
 import time
 import gevent
-from collections import OrderedDict
 
 class ConfigException(Exception):
     pass
@@ -12,14 +10,6 @@ def dynamic_class(modname, classname):
     for m in modname.split('.')[1:]:
         mod = getattr(mod, m)
     return getattr(mod, classname)
-
-def construct_yaml_map(loader, node):
-    data = OrderedDict()
-    value = loader.construct_mapping(node)
-    data.update(value)
-    return data
-
-yaml.add_constructor(u'tag:yaml.org,2002:omap', construct_yaml_map)
 
 class BroadcastQueue(list):
     """Queue-like object that broadcasts to all child queues."""
