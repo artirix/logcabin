@@ -1,6 +1,9 @@
 logcabin
 ========
 
+.. image:: https://travis-ci.org/artirix/logcabin.png?branch=master
+        :target: https://travis-ci.org/artirix/logcabin
+
 logcabin is a program for aggregating and processing events from a diverse range
 of sources and formats, and outputting to the file system, database or a search
 engine.

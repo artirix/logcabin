@@ -5,11 +5,11 @@ from setuptools import setup, find_packages
 setup(
     name="logcabin",
     version=':versiontools:logcabin:',
-    license=license,
+    license='Apache 2.0',
     description="Logging framework for receiving and processing events from a "
     "diverse range of sources and formats, and relaying onto multiple "
     "destinations.",
-    long_description=file('README.md').read(),
+    long_description=file('README.rst').read(),
     author='Barnaby Gray',
     author_email='barnaby@artirix.com',
     setup_requires=[
