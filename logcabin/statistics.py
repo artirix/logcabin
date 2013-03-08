@@ -16,15 +16,15 @@ def percentile(li, pc):
     """
     Calculate percentiles of a list.
 
-    >>> li = [1,2,3,4,5,6,7,8,9]
+    >>> li = [0,1,2,3,4,5,6,7,8,9,10]
     >>> percentile(li, 0.5)
     5
     >>> percentile(li, 0.9)
-    8.2
-    >>> percentile(li, 1.0)
     9
+    >>> percentile(li, 1.0)
+    10
     >>> percentile(li, 0.0)
-    1
+    0
     >>> percentile([], 0.5)
 
     :param list li: data points
