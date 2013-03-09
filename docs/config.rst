@@ -80,6 +80,11 @@ Branching
 Inputs
 ------
 
+file
+^^^^
+.. automodule:: logcabin.inputs.file
+   :members: File
+
 udp
 ^^^
 .. automodule:: logcabin.inputs.udp
@@ -145,6 +150,11 @@ perf
 ^^^^
 .. automodule:: logcabin.outputs.perf
    :members: Perf
+
+s3
+^^
+.. automodule:: logcabin.outputs.s3
+   :members: S3
 
 zeromq
 ^^^^^^

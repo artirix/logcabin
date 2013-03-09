@@ -7,9 +7,9 @@ import random
 
 from logcabin.event import Event
 from logcabin.context import DummyContext
-from logcabin.inputs import udp, zeromq
+from logcabin.inputs import udp, zeromq, file as fileinput
 
-from testhelper import assertEventEquals
+from testhelper import TempDirectory, assertEventEquals
 
 class InputTests(TestCase):
     def create(self, conf):
@@ -58,3 +58,29 @@ class UdpTests(InputTests):
         # yield for processing to happen
         q = self.waitForQueue()
         assertEventEquals(self, Event(data='abc'), q[0])
+
+class FileTests(InputTests):
+    cls = fileinput.File
+
+    def test_success(self):
+        with TempDirectory():
+            conf = {'path': 'test*.log'}
+            self.create(conf)
+
+            # create log after a short time
+            gevent.sleep(0.01)
+            with file('test1.log', 'w') as fin:
+                print >>fin, 'abc'
+                gevent.sleep(0.01)
+                print >>fin, 'def'
+
+            q = self.waitForQueue(events=2)
+            assertEventEquals(self, Event(data='abc'), q[0])
+            assertEventEquals(self, Event(data='def'), q[1])
+
+    def test_missing(self):
+        with TempDirectory():
+            conf = {'path': 'test*.log'}
+            self.create(conf)
+
+            q = self.waitForQueue(events=0)

@@ -5,13 +5,21 @@ import boto.s3.key
 class S3(Output):
     """Uploads to an S3 bucket.
 
+    This should follow the File output, in order to upload the rolled log files
+    to S3::
+
+        File(filename='log/batch.log', )
+        If(lambda ev: 'fileroll' in ev.tags):
+            S3(access_key='...', secret_key='...',
+               bucket='x', path='logs/{timestamp:%Y-%m-%d/%H%M%S}.log')
+
     Bucket or path may by formatted by event, eg. to upload to a timestamped path:
     path='{timestamp:%Y-%m-%d/%H%M%S}.log'
 
-    :param string access_key: Amazon S3 access key (required)
-    :param string secret_key: Amazon S3 secret key (required)
-    :param string bucket: the bucket name (required)
-    :param string path: the path (required)
+    :param string access_key: Amazon S3 access key
+    :param string secret_key: Amazon S3 secret key
+    :param string bucket: the bucket name
+    :param string path: the path
     """
 
     def __init__(self, access_key, secret_key, bucket, path):

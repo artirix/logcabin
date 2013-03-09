@@ -6,6 +6,8 @@ from .input import Input
 class Udp(Input):
     """Receives from a udp port.
 
+    Creates events with the field 'data' set to the packet received.
+
     :param integer port: listening port
     """
 

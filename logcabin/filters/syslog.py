@@ -6,6 +6,15 @@ from .filter import Filter
 class Syslog(Filter):
     """Parse a syslog encoded field.
 
+    This sets the fields:
+    - timestamp
+    - facility
+    - severity
+    - host
+    - program
+    - pid
+    - message
+
     :param string field: the field containing the syslog message (default: data)
     :param boolean consume: whether to remove the field after decoding (default: true)
     """
