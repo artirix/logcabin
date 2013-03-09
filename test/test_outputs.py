@@ -11,12 +11,13 @@ import struct
 import time
 from datetime import datetime
 import cPickle as pickle
+import zmq.green as zmq
 
 from logcabin.event import Event
 from logcabin.context import DummyContext
 
 from logcabin.outputs import elasticsearch, file as fileoutput, graphite, log, \
-    mongodb, perf, s3
+    mongodb, perf, s3, zeromq
 
 from testhelper import TempDirectory, assertEventEquals
 
@@ -206,3 +207,22 @@ class GraphiteTests(OutputTests):
             ('a.b.c.min', (t_now, 1.0)),
             ('a.b.c.mean', (t_now, 1.5))
         ], received[0])
+
+class ZeromqTests(OutputTests):
+    cls = zeromq.Zeromq
+
+    def test_log(self):
+        conf = {'address': 'ipc://testipc2', 'mode': 'connect', 'socket': 'PUSH'}
+        self.create(conf)
+
+        # create a zeromq socket
+        ctx = zmq.Context()
+        sock = ctx.socket(zmq.PULL)
+        sock.bind(conf['address'])
+
+        ev = Event(field='x')
+        self.input.put(ev)
+        self.waitForEmpty()
+
+        data = sock.recv()
+        self.assertEquals(ev.to_json(), data)

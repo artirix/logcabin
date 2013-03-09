@@ -145,3 +145,8 @@ perf
 ^^^^
 .. automodule:: logcabin.outputs.perf
    :members: Perf
+
+zeromq
+^^^^^^
+.. automodule:: logcabin.outputs.zeromq
+   :members: Zeromq
