@@ -18,17 +18,14 @@ setup(
     ],
     install_requires=[
         'python-dateutil',
-        'pyyaml',
         'gevent >= 0.13.6',
-        'pyzmq == 2.2.0.1',
-        # tie to version otherwise pip insists on updating it
     ],
     tests_require=[
         'nose',
     ],
     test_suite="nose.collector",
     packages=find_packages(exclude=('docs', 'test')),
-    package_data={'logcabin': ['logging.yml']},
+    package_data={'logcabin': ['logging.cfg']},
     zip_safe=False,
     entry_points={
         'console_scripts':

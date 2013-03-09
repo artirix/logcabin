@@ -1,7 +1,6 @@
 from unittest import TestCase
 import gevent
 from gevent.queue import Queue
-import yaml
 
 from logcabin.event import Event
 from logcabin.context import DummyContext
@@ -12,9 +11,6 @@ from testhelper import assertEventEquals
 
 class FilterTests(TestCase):
     def create(self, conf={}, events=[]):
-        if isinstance(conf, str):
-            conf = yaml.load(conf)
-
         self.input = Queue()
         self.output = Queue()
         with DummyContext():

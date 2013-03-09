@@ -1,9 +1,4 @@
-Introduction
-============
-
-logcabin is a program for aggregating and processing events from a diverse range
-of sources and formats, and outputting to the file system, database or a search
-engine.
+.. include:: ../README.rst
 
 Features
 --------

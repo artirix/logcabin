@@ -16,7 +16,7 @@ Install::
 
 Configure::
 
-    $ wget https://raw.github.com/artirix/logcabin/master/config/example1.py -O config.py
+    $ wget https://raw.github.com/artirix/logcabin/master/config/simple.py -O config.py
 
 Run::
 
@@ -25,6 +25,25 @@ Run::
 Send some messages::
 
     $ echo '{"message": "test log event"}' | nc -u localhost 6000
+    $ cat output.log
+
+Dependencies
+------------
+pip will install gevent, which needs libevent-dev (or equivalent package) to
+build::
+    $ apt-get install libevent-dev
+
+All other dependencies are optional, and only required if you use that module.
+
+zeromq
+^^^^^^
+    $ apt-get install libzmq1-dev (or equivalent)
+    $ pip install -U pyzmq
+    (>= 2.2.0.1)
+
+mongodb
+^^^^^^^
+    $ pip install pymongo
 
 Docs
 ----

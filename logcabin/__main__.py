@@ -3,7 +3,7 @@
 import logcabin
 import sys
 import os
-import yaml
+import json
 import gevent
 import gevent.event
 import gevent.monkey
@@ -44,8 +44,8 @@ class LogCabin(object):
         opts, args = parser.parse_args()
 
         # logging configuration
-        logging_yml = os.path.join(os.path.dirname(__file__), 'logging.yml')
-        self.logconfig = yaml.load(file(logging_yml))
+        logging_cfg = os.path.join(os.path.dirname(__file__), 'logging.cfg')
+        self.logconfig = json.load(file(logging_cfg))
         logpath = os.path.abspath(opts.log)
         self.logconfig['handlers']['file']['filename'] = logpath
 

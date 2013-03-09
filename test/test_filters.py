@@ -1,7 +1,6 @@
 from unittest import TestCase
 import gevent
 from gevent.queue import Queue
-import yaml
 import datetime
 
 from logcabin.event import Event
@@ -15,9 +14,6 @@ class FilterTests(TestCase):
         return self.cls(**conf)
 
     def create(self, conf={}, events=[]):
-        if isinstance(conf, str):
-            conf = yaml.load(conf)
-
         self.input = Queue()
         self.output = Queue()
         with DummyContext():

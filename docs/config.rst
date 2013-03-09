@@ -48,115 +48,24 @@ Example::
 This configures two inputs, which are both processed through the Json filter,
 and then output to two outputs in parallel: Log and Elasticsearch.
 
-For full details of the inputs, filters and outputs available see below.
+For full details of the inputs, filters and outputs see sections below.
 
-Flows
------
+Examples
+--------
+Below are some example configurations.
 
-The pipeline can fanin, and fanout and branch at any point. The following stages
-control flow in the pipeline.
-
-Fanin
+Files
 ^^^^^
-Fanins create many parallel inputs that will feed onto the same next stage, so
-multiple sources can be used for input of events (eg. udp and zeromq).
-
-Sequence
-^^^^^^^^
-Sequences are a series of stages, in order. The top-level of the configuration
-is implicitly a Sequence.
-
-Fanout
-^^^^^^
-Fanouts create many parallel outputs that run independently.
-
-Branching
-^^^^^^^^^
-``If`` and ``Switch`` can be used to conditionally call stages.
-
-.. automodule:: logcabin.flow
-   :members: Fanin, Sequence, Fanout, If, Switch
+.. literalinclude:: ../config/files.py
 
 Inputs
-------
-
-file
-^^^^
-.. automodule:: logcabin.inputs.file
-   :members: File
-
-udp
-^^^
-.. automodule:: logcabin.inputs.udp
-   :members: Udp
-
-zeromq
 ^^^^^^
-.. automodule:: logcabin.inputs.zeromq
-   :members: Zeromq
-
-Filters
--------
-
-json
-^^^^
-.. automodule:: logcabin.filters.json
-   :members: Json
-
-syslog
-^^^^^^
-.. automodule:: logcabin.filters.syslog
-   :members: Syslog
-
-mutate
-^^^^^^
-.. automodule:: logcabin.filters.mutate
-   :members: Mutate
-
-regex
-^^^^^
-.. automodule:: logcabin.filters.regex
-   :members: Regex
-
-stats
-^^^^^
-.. automodule:: logcabin.filters.stats
-   :members: Stats
+.. literalinclude:: ../config/inputs.py
 
 Outputs
--------
-
-elasticsearch
-^^^^^^^^^^^^^
-.. automodule:: logcabin.outputs.elasticsearch
-   :members: Elasticsearch
-
-graphite
-^^^^^^^^
-.. automodule:: logcabin.outputs.graphite
-   :members: Graphite
-
-log
-^^^
-.. automodule:: logcabin.outputs.log
-   :members: Log
-
-mongodb
 ^^^^^^^
-.. automodule:: logcabin.outputs.mongodb
-   :members: Mongodb
+.. literalinclude:: ../config/outputs.py
 
-perf
-^^^^
-.. automodule:: logcabin.outputs.perf
-   :members: Perf
-
-s3
-^^
-.. automodule:: logcabin.outputs.s3
-   :members: S3
-
-zeromq
-^^^^^^
-.. automodule:: logcabin.outputs.zeromq
-   :members: Zeromq
+Complex
+^^^^^^^
+.. literalinclude:: ../config/complex.py

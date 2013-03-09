@@ -6,12 +6,19 @@
 Logcabin documentation
 ======================
 
+logcabin is a program for aggregating and processing events from a diverse range
+of sources and formats, and outputting to the file system, database or a search
+engine.
+
 .. toctree::
    :maxdepth: 2
    
    intro
-   installation
    config
+   flows
+   inputs
+   filters
+   outputs
 
 Index
 =====
