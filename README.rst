@@ -26,6 +26,10 @@ Send some messages::
 
     $ echo '{"message": "test log event"}' | nc -u localhost 6000
 
+Docs
+----
+See: http://logcabin.readthedocs.org/en/latest/
+
 Contributing
 ------------
 Contributions welcome! Please:
