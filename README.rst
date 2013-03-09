@@ -40,6 +40,10 @@ Contributions welcome! Please:
 
 Changelog
 ---------
-0.1.0   
+0.1b3
+
+- Add file input and zeromq output.
+
+0.1b2
 
 - Initial release

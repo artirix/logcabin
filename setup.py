@@ -4,6 +4,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="logcabin",
+    url='http://github.com/artirix/logcabin/',
     version=':versiontools:logcabin:',
     license='Apache 2.0',
     description="Logging framework for receiving and processing events from a "
