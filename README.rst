@@ -31,18 +31,23 @@ Dependencies
 ------------
 pip will install gevent, which needs libevent-dev (or equivalent package) to
 build::
+
     $ apt-get install libevent-dev
 
 All other dependencies are optional, and only required if you use that module.
 
 zeromq
 ^^^^^^
+Install::
+
     $ apt-get install libzmq1-dev (or equivalent)
     $ pip install -U pyzmq
     (>= 2.2.0.1)
 
 mongodb
 ^^^^^^^
+Install::
+
     $ pip install pymongo
 
 Docs

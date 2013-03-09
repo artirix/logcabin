@@ -11,7 +11,7 @@ class File(Input):
     Creates events with the field 'data' set to the line received.
 
     :param string path: path on the file system to the log file(s), wildcards may
-    be used to match multiple files.
+      be used to match multiple files.
     """
 
     def __init__(self, path):
