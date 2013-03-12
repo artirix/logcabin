@@ -77,11 +77,29 @@ class RegexTests(FilterTests):
 class MutateTests(FilterTests):
     cls = mutate.Mutate
 
-    def test_mutate(self):
+    def test_set(self):
         self.create({'set': {'a': 2}},
             [Event(a=1)])
         q = self.wait()
         assertEventEquals(self, Event(a=2), q[0])
+
+    def test_set_format(self):
+        self.create({'set': {'a': '{b}.{c}'}},
+            [Event(b=1, c=2)])
+        q = self.wait()
+        assertEventEquals(self, Event(a='1.2', b=1, c=2), q[0])
+
+    def test_rename(self):
+        self.create({'rename': {'b': 'a', 'd': 'c'}},
+            [Event(a=1)])
+        q = self.wait()
+        assertEventEquals(self, Event(b=1), q[0])
+
+    def test_unset(self):
+        self.create({'unset': ['a', 'c']},
+            [Event(a=1, b=2)])
+        q = self.wait()
+        assertEventEquals(self, Event(b=2), q[0])
 
 class StatsTests(FilterTests):
     cls = stats.Stats
