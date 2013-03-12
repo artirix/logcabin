@@ -64,6 +64,15 @@ Contributions welcome! Please:
 
 Changelog
 ---------
+0.1b5
+
+- Bug fix for flow stopping at If/Switch
+- Add rename and unset to Mutate
+
+0.1b4
+
+- Documentation improvements
+
 0.1b3
 
 - Add file input and zeromq output.
