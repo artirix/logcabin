@@ -2,7 +2,7 @@
 
 import sys
 
-__version__ = (0, 1, 0, "beta", 5)
+__version__ = (0, 1, 0, "beta", 6)
 
 def main():
     # avoid importing all dependencies when doing 'import logcabin' for
