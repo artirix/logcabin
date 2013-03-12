@@ -3,7 +3,7 @@ import gevent
 from gevent.queue import Queue
 
 from logcabin.event import Event
-from logcabin.context import DummyContext
+from logcabin.context import Context, DummyContext
 from logcabin.flow import If, Switch
 from logcabin.filters import mutate
 
@@ -13,9 +13,13 @@ class FilterTests(TestCase):
     def create(self, conf={}, events=[]):
         self.input = Queue()
         self.output = Queue()
-        with DummyContext():
+
+        context = DummyContext()
+        with context:
             self.i = self.create_stage(**conf)
-        self.input = self.i.setup(self.output)
+            self.input = self.i.setup(self.output)
+
+        self.assertEquals(1, len(context.stages))
 
         self.i.start()
         for ev in events:
@@ -36,13 +40,13 @@ class FilterTests(TestCase):
 
 class SwitchTests(FilterTests):
     def create_stage(self):
-        test = Switch()
-        with test(lambda ev: ev.a == 1):
-            mutate.Mutate(set={'b': 1})
-        with test('a == 2'):
-            mutate.Mutate(set={'b': 2})
-        with test.default:
-            mutate.Mutate(set={'b': False})
+        with Switch() as test:
+            with test(lambda ev: ev.a == 1):
+                mutate.Mutate(set={'b': 1})
+            with test('a == 2'):
+                mutate.Mutate(set={'b': 2})
+            with test.default:
+                mutate.Mutate(set={'b': False})
         return test
 
     def test_lambda(self):

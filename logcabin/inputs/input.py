@@ -1,4 +1,4 @@
-from ..common import Stage
+from ..common import SpawnedStage
 
-class Input(Stage):
+class Input(SpawnedStage):
     pass

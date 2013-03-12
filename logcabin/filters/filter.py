@@ -1,4 +1,4 @@
-from ..common import SimpleStage
+from ..common import ProcessingStage
 
-class Filter(SimpleStage):
+class Filter(ProcessingStage):
     pass

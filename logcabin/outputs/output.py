@@ -1,4 +1,4 @@
-from ..filters.filter import Filter
+from ..common import ProcessingStage
 
-class Output(Filter):
+class Output(ProcessingStage):
     pass

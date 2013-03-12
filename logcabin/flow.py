@@ -1,5 +1,6 @@
-from common import SimpleStage, MultiStage
+from common import ProcessingStage, MultiStage
 from util import BroadcastQueue
+from context import ContextManager
 
 class Fanin(MultiStage):
     """
@@ -78,7 +79,7 @@ class DefaultDictProxy(object):
         else:
             return self.d.get(k)
 
-class Switch(SimpleStage):
+class Switch(ProcessingStage, MultiStage):
     """Branch flow based on a condition.
 
     The cases are specified using this syntax. The condition may be a lambda
@@ -96,14 +97,6 @@ class Switch(SimpleStage):
     def __init__(self, on_error='reject'):
         super(Switch, self).__init__(on_error=on_error)
         self.cases = []
-
-    # configuration contexts
-
-    def __enter__(self):
-        return self
-
-    def __exit__(self, *exc_info):
-        pass
 
     @contextmanager
     def __call__(self, condition):
@@ -129,10 +122,14 @@ class Switch(SimpleStage):
         return super(Switch, self).setup(q)
 
     def start(self):
-        super(Switch, self).start()
-        # start sub-pipelines
-        for t, br in self.cases:
-            br.start()
+        # call both multistage to start the branch and ProcessingStage greenlet
+        ProcessingStage.start(self)
+        MultiStage.start(self)
+
+    def stop(self):
+        # stop the branch and our greenlet
+        ProcessingStage.stop(self)
+        MultiStage.stop(self)
 
     def process(self, event):
         # pass the event into the sub-queue for the applicable pipeline
@@ -146,7 +143,7 @@ class Switch(SimpleStage):
         # if no condition handles it, pass straight on (True)
         return ret
 
-class If(SimpleStage):
+class If(ProcessingStage, MultiStage):
     """
     Conditionally execute stages.
 
@@ -166,13 +163,14 @@ class If(SimpleStage):
         self.condition = condition
 
     # configuration contexts
-
     def __enter__(self):
+        super(If, self).__enter__()
         self.branch = Sequence()
         return self.branch.__enter__()
 
     def __exit__(self, *exc_info):
-        return self.branch.__exit__()
+        self.branch.__exit__()
+        return super(If, self).__exit__()
 
     def setup(self, q):
         # pass output queue to the branch
@@ -180,9 +178,14 @@ class If(SimpleStage):
         return super(If, self).setup(q)
 
     def start(self):
-        super(If, self).start()
-        # start sub-pipelines
-        self.branch.start()
+        # call both multistage to start the branch and ProcessingStage greenlet
+        ProcessingStage.start(self)
+        MultiStage.start(self)
+
+    def stop(self):
+        # stop the branch and our greenlet
+        ProcessingStage.stop(self)
+        MultiStage.stop(self)
 
     def process(self, event):
         # pass the event into the sub-queue for the applicable pipeline

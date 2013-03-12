@@ -31,21 +31,8 @@ class Stage(object):
     def register(self):
         Context.instance.current().add(self)
 
-    def setup(self, q):
-        self.output = q
-        self.input = JoinableQueue()
-        return self.input
-
     def configure(self):
         """Configure the stage"""
-        pass
-
-    def start(self):
-        """Start the stage running in a greenlet."""
-        # run each in a greenlet
-        self.g = gevent.spawn(self._run)
-
-    def _run(self):
         pass
 
     def _error(self, event, reason=None):
@@ -58,6 +45,33 @@ class Stage(object):
             # otherwise ignore
             self.logger.warn('ignoring %s: %s' % (event, reason))
 
+    # implement these in base classes
+    def setup(self, q):
+        raise NotImplementedError
+
+    def start(self):
+        raise NotImplementedError
+
+    def stop(self):
+        raise NotImplementedError
+
+
+class SpawnedStage(Stage):
+    """A stage that is spawned into a separate greenlet, and _run called"""
+
+    def setup(self, q):
+        self.output = q
+        self.input = JoinableQueue()
+        return self.input
+
+    def start(self):
+        """Start the stage running in a greenlet."""
+        # run each in a greenlet
+        self.g = gevent.spawn(self._run)
+
+    def _run(self):
+        pass
+
     def stop(self):
         """Stop the stage from running."""
         # if necesssary, avoid to more gracefully handle termination in the stage
@@ -66,7 +80,9 @@ class Stage(object):
             self.g.join()
         self.logger.debug('Stopped')
 
-class SimpleStage(Stage):
+class ProcessingStage(SpawnedStage):
+    """A spawned stage, that processes events one by one in process()"""
+
     def _run(self):
         while True:
             event = self.input.get()
@@ -81,9 +97,11 @@ class SimpleStage(Stage):
         pass
 
 class MultiStage(Stage, ContextManager):
-    def __init__(self):
+    """Base class for stages with children"""
+
+    def __init__(self, **kwargs):
         self.stages = []
-        super(MultiStage, self).__init__()
+        super(MultiStage, self).__init__(**kwargs)
 
     def __str__(self):
         x = ', '.join(str(s) for s in self.stages)
@@ -106,6 +124,3 @@ class MultiStage(Stage, ContextManager):
             self.logger.debug('Stopping %s' % s)
             s.stop()
             self.logger.debug('Stopped %s' % s)
-
-class Constants(object):
-    ISOFORMAT = '%Y-%m-%dT%H:%M:%SZ'
