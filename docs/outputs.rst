@@ -6,6 +6,11 @@ elasticsearch
 .. automodule:: logcabin.outputs.elasticsearch
    :members: Elasticsearch
 
+file
+^^^^
+.. automodule:: logcabin.outputs.file
+   :members: File
+
 graphite
 ^^^^^^^^
 .. automodule:: logcabin.outputs.graphite

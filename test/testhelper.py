@@ -25,8 +25,9 @@ def any(_):
     """Matches anything"""
     return True
 
-def about(x):
-    return Matcher(lambda t: int(x) == int(t))
+def about(x, p=0):
+    fmt = '%%.%df' % p
+    return Matcher(lambda t: fmt % x == fmt % t)
 
 def between(x, y):
     return Matcher(lambda t: t > x and t < y)
