@@ -39,3 +39,37 @@ class Periodic(gevent.Greenlet):
             gevent.sleep(next - now)
             self.callback()
             now = time.time()
+
+def get_path(d, path):
+    """Get a nested dictionary values, supporting wildcard '*' matches at any level
+
+    >>> sorted(get_path({'a': 1, 'b': 2}, 'a'))
+    [('a', 1)]
+    >>> sorted(get_path({'a': 1, 'b': 2}, '*'))
+    [('a', 1), ('b', 2)]
+    >>> sorted(get_path({'a':{'b':{'c': 1}}}, 'a.b.c'))
+    [('a.b.c', 1)]
+    >>> sorted(get_path({'a': {'b': {'c': 1}, 'd': {'c': 2}}, 'b': {'b': {'c': 3}}}, 'a.*.c'))
+    [('a.b.c', 1), ('a.d.c', 2)]
+    >>> sorted(get_path({}, 'a.*.c'))
+    []
+    >>> sorted(get_path({'a': 1}, 'a.b'))
+    []
+    >>> sorted(get_path({'a': 1}, 'a.*'))
+    []
+    """
+
+    matches = [([], d)]
+    parts = path.split('.')
+    for part in parts:
+        previous = matches
+        matches = []
+        
+        for key, d in previous:
+            if isinstance(d, dict):
+                if part == '*':
+                    matches.extend((key+[k], v) for k, v in d.iteritems())
+                elif isinstance(d, dict) and part in d:
+                    matches.append((key+[part], d[part]))
+
+    return [ ('.'.join(k), v) for k, v in matches ]

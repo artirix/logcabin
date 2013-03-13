@@ -103,17 +103,59 @@ class MutateTests(FilterTests):
 
 class StatsTests(FilterTests):
     cls = stats.Stats
-    conf = dict(period=0.1, metrics={'rails.{controller}.{action}.{0}': '*'})
 
-    def test_stats(self):
-        self.create(StatsTests.conf, [
-            Event(controller='home', action='index', duration=3.0, bytes=6926),
-            Event(controller='home', action='login', duration=2.4, bytes=15568),
-            Event(controller='home', action='index', duration=4.0, bytes=18150),
-            Event(controller='home', action='index', duration=3.5, bytes=30159),
-            Event(controller='missing', action='duration'),
-            Event(someotherevent='blah', duration=3.5),
-        ])
+    events = [
+        Event(controller='home', action='index', duration=3.0, bytes=6926, timings={'view': 1.0}),
+        Event(controller='home', action='login', duration=2.4, bytes=15568, timings={'view': 2.0}),
+        Event(controller='home', action='index', duration=4.0, bytes=18150, timings={'view': 1.2}),
+        Event(controller='home', action='index', duration=3.5, bytes=30159, timings={'view': 2.3}),
+        Event(controller='missing', action='duration'),
+        Event(someotherevent='blah', duration=3.5),
+    ]
+
+    def test_nested(self):
+        self.create({'period': 0.1, 'metrics': {'rails.{controller}.{action}.{0}': 'timings.*'}},
+            self.events)
+
+        # 8 events expected - the above 6, and then 2 stat events
+        q = self.wait(events=8)
+
+        q = [i for i in q if i.stats]
+        q.sort(key=lambda k: k.metric)
+
+        expected = Event(metric='rails.home.index.timings.view',
+            stats={
+                'count': 3,
+                'max': 2.3,
+                'mean': 1.5,
+                'median': 1.2,
+                'min': 1.0,
+                'rate': between(1, 100),
+                'stddev': about(2.34, 2),
+                'upper95': 2.19,
+                'upper99': 2.278},
+            tags=['stat'],
+        )
+        assertEventEquals(self, expected, q[0])
+
+        expected = Event(metric='rails.home.login.timings.view',
+            stats={
+                'count': 1,
+                'max': 2.0,
+                'mean': 2.0,
+                'median': 2.0,
+                'min': 2.0,
+                'rate': between(1, 100),
+                'stddev': 0.0,
+                'upper95': 2.0,
+                'upper99': 2.0},
+            tags=['stat'],
+        )
+        assertEventEquals(self, expected, q[1])
+
+    def test_wildcard(self):
+        self.create({'period': 0.1, 'metrics': {'rails.{controller}.{action}.{0}': '*'}},
+            self.events)
 
         # 8 events expected - the above 6, and then 4 stat events
         q = self.wait(events=10)
