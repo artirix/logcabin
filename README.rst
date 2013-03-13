@@ -64,6 +64,10 @@ Contributions welcome! Please:
 
 Changelog
 ---------
+0.1b7
+
+- Add support to stats for wildcarding and nested fields
+
 0.1b6
 
 - Add index/type formatting for elasticsearch
