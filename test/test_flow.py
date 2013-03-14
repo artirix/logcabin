@@ -4,12 +4,12 @@ from gevent.queue import Queue
 
 from logcabin.event import Event
 from logcabin.context import Context, DummyContext
-from logcabin.flow import If, Switch
+from logcabin.flow import If, Switch, Sequence
 from logcabin.filters import mutate
 
 from testhelper import assertEventEquals
 
-class FilterTests(TestCase):
+class FlowTests(TestCase):
     def create(self, conf={}, events=[]):
         self.input = Queue()
         self.output = Queue()
@@ -38,7 +38,20 @@ class FilterTests(TestCase):
         if events:
             return [self.output.get() for n in xrange(events)]
 
-class SwitchTests(FilterTests):
+class SequenceTests(FlowTests):
+    def create_stage(self):
+        with Sequence() as test:
+            mutate.Mutate(set={'a': 1})
+            mutate.Mutate(set={'b': 2})
+        return test
+
+    def test_simple(self):
+        self.create({},
+            [Event(a=1)])
+        q = self.wait()
+        assertEventEquals(self, Event(a=1, b=2), q[0])
+
+class SwitchTests(FlowTests):
     def create_stage(self):
         with Switch() as test:
             with test(lambda ev: ev.a == 1):
@@ -73,7 +86,7 @@ class SwitchTests(FilterTests):
         q = self.wait()
         assertEventEquals(self, Event(b=False), q[0])
 
-class IfTests(FilterTests):
+class IfTests(FlowTests):
     def create_stage(self):
         test = If(lambda ev: ev.a == 1)
         with test:

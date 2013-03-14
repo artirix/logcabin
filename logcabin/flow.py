@@ -1,6 +1,5 @@
 from common import ProcessingStage, MultiStage
 from util import BroadcastQueue
-from context import ContextManager
 
 class Fanin(MultiStage):
     """
@@ -17,6 +16,7 @@ class Fanin(MultiStage):
         self.output = q
         for s in self.stages:
             s.setup(self.output)
+        return None # fanin has no inputs
 
 class Sequence(MultiStage):
     """
@@ -40,6 +40,7 @@ class Sequence(MultiStage):
         for s in reversed(self.stages):
             q = s.setup(q)
         self.input = q
+        return self.input
 
 class Fanout(MultiStage):
     """

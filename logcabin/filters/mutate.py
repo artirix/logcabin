@@ -23,14 +23,14 @@ class Mutate(Filter):
             if isinstance(v, types.StringTypes):
                 v = event.format(v)
             event[k] = v
-            self.logger.debug('Set %s to %s' % (k, v))
+            self.logger.debug('Set %r to %r' % (k, v))
 
         for k, v in self.renames.iteritems():
             if v in event:
                 event[k] = event.pop(v)
-                self.logger.debug('Renamed %s to %s' % (v, k))
+                self.logger.debug('Renamed %r to %r' % (v, k))
 
         for k in self.unsets:
             if k in event:
                 del event[k]
-                self.logger.debug('Unset %s' % (k,))
+                self.logger.debug('Unset %r' % (k,))
