@@ -72,7 +72,7 @@ class RegexTests(FilterTests):
             'on_error': 'tag'},
             [Event(data='.!$#')])
         q = self.wait()
-        self.assertEquals(['_unparsed'], q[0].tags)
+        self.assertEquals(['error'], q[0].tags)
 
 class MutateTests(FilterTests):
     cls = mutate.Mutate
@@ -262,6 +262,6 @@ class SyslogTests(FilterTests):
             [Event(data=x) for x in self.bad_packets])
         events = self.wait(events=len(self.bad_packets))
 
-        bad_events = [Event(data=x, message='invalid syslog', tags=['_unparsed']) for x in self.bad_packets]
+        bad_events = [Event(data=x, message='invalid syslog', tags=['error']) for x in self.bad_packets]
         for ev in bad_events:
             assertEventEquals(self, ev, events.pop(0))

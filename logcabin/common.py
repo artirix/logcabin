@@ -37,13 +37,16 @@ class Stage(object):
 
     def _error(self, event, reason=None):
         if self.on_error == 'tag':
-            event.add_tag('_unparsed')
+            event.add_tag('error')
             if reason:
                 event['message'] = str(reason)
             self.output.put(event)
         else:
             # otherwise ignore
-            self.logger.warn('ignoring %s: %s' % (event, reason))
+            if isinstance(reason, Exception):
+                self.logger.exception('ignoring %s: %s' % (event, reason))
+            else:
+                self.logger.warn('ignoring %s: %s' % (event, reason))
 
     # implement these in base classes
     def setup(self, q):
@@ -89,9 +92,12 @@ class ProcessingStage(SpawnedStage):
 
             # block exit whilst processing an event
             with self.busy:
-                ret = self.process(event)
-                if ret is not False and self.output:
-                    self.output.put(event)
+                try:
+                    ret = self.process(event)
+                    if ret is not False and self.output:
+                        self.output.put(event)
+                except Exception as ex:
+                    self._error(event, ex)
 
     def process(self, event):
         pass

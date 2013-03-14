@@ -34,7 +34,7 @@ class S3(Output):
         path = event.format(self.path)
 
         filename = event['filename']
-        self.logger.debug('Uploading %s to s3://%s/%s' % (filename, bucket, path))
+        self.logger.info('Uploading %s to s3://%s/%s' % (filename, bucket, path))
         s3 = boto.connect_s3(self.access_key, self.secret_key)
         bucket = s3.get_bucket(bucket)
         k = bucket.new_key(path)

@@ -20,7 +20,9 @@ class Zeromq(Input):
         self.ctx = zmq.Context()
         self.sock = self.ctx.socket(getattr(zmq, socket))
         self.address = address
-        if mode == 'connect':
+        if address == 'tcp://*':
+            self.sock.bind_to_random_port(address)
+        elif mode == 'connect':
             self.sock.connect(self.address)
         else:
             self.sock.bind(self.address)

@@ -6,7 +6,7 @@ from filters.mutate import Mutate
 from outputs.log import Log
 
 with Fanin():
-    Zeromq()
+    Zeromq(address='tcp://*')
 
 with Switch() as case:
     with case(lambda ev: ev.field == 'value'):

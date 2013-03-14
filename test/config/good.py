@@ -4,7 +4,7 @@ from filters.json import Json
 from outputs.log import Log
 
 with Fanin():
-    Zeromq()
+    Zeromq(address='tcp://*')
 
 Json()
 
