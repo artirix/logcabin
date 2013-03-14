@@ -76,13 +76,13 @@ class FileTests(OutputTests):
 
     def test_simple(self):
         with TempDirectory():
-            self.create({'filename': 'output_{program}.log'})
+            self.create({'filename': 'log/output_{program}.log'})
 
             map(self.input.put, self.events)
             self.waitForEmpty()
 
-            self.assertFileContents(self.events[0].to_json()+'\n', 'output_httpd.log')
-            self.assertFileContents(self.events[1].to_json()+'\n', 'output_ntpd.log')
+            self.assertFileContents(self.events[0].to_json()+'\n', 'log/output_httpd.log')
+            self.assertFileContents(self.events[1].to_json()+'\n', 'log/output_ntpd.log')
 
     def test_max_size(self):
         with TempDirectory():

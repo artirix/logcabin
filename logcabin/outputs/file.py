@@ -31,6 +31,9 @@ class File(Output):
         if self.max_size and os.path.exists(filename) and os.path.getsize(filename) > self.max_size:
             self._rotate(filename)
 
+        dirname = os.path.dirname(filename)
+        if dirname and not os.path.exists(dirname):
+            os.makedirs(dirname)
         with file(filename, 'a') as fout:
             print >>fout, event.to_json()
 
