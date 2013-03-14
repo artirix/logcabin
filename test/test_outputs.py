@@ -19,7 +19,7 @@ from logcabin.context import DummyContext
 from logcabin.outputs import elasticsearch, file as fileoutput, graphite, log, \
     mongodb, perf, s3, zeromq
 
-from testhelper import TempDirectory, assertEventEquals
+from testhelper import TempDirectory, assertEventEquals, ANY
 
 class OutputTests(TestCase):
     def create(self, conf={}):
@@ -207,6 +207,28 @@ class GraphiteTests(OutputTests):
             ('a.b.c.min', (t_now, 1.0)),
             ('a.b.c.mean', (t_now, 1.5))
         ], received[0])
+
+    def test_unavailable(self):
+        port = random.randint(1024, 65535)
+        received = []
+        
+        def handle(socket, address):
+            # graphite is a 4-byte length, followed by pickled representation
+            length, = struct.unpack('!L', socket.recv(4))
+            d = socket.recv(length)
+            received.append(pickle.loads(d))
+        server = gevent.server.StreamServer(('', port), handle)
+
+        self.create({'port': port})
+
+        self.input.put(Event(metric='a.b.c', stats={'mean': 1.5, 'min': 1.0}))
+        server.start()
+
+        self.waitForEmpty()
+
+        self.assertEquals(0, self.input.qsize())
+        server.stop()
+        self.assertEquals(1, len(received))
 
 class ZeromqTests(OutputTests):
     cls = zeromq.Zeromq

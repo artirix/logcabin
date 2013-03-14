@@ -1,3 +1,4 @@
+import gevent
 import gevent.socket as socket
 import pickle
 import struct
@@ -16,25 +17,39 @@ class Graphite(Output):
         super(Graphite, self).__init__()
         self.host = host
         self.port = port
-        self.connect()
-        
-    def connect(self):
-        self.sock = socket.socket()
-        self.sock.connect((self.host, self.port))
         self._metrics = []
+        self._connected = False
+        
+    def flush(self):
+        if not self._connected:
+            self.connect()
+
+        # wire protocol is a 4-byte length, followed by pickled representation,
+        # see: http://graphite.readthedocs.org/en/1.0/feeding-carbon.html
+        payload = pickle.dumps(self._metrics)
+        header = struct.pack("!L", len(payload))
+        message = header + payload
+        self.sock.sendall(message)
+        self._metrics = []
+
+    def connect(self):
+        while True:
+            try:
+                self.sock = socket.socket()
+                self.sock.connect((self.host, self.port))
+                break
+            except:
+                self.logger.warn("Couldn't connect to graphite: %s:%s, retrying in 1s" % (self.host, self.port))
+                gevent.sleep(1.0)
+
+        self._connected = True
         
     def process(self, event):
         metric = event.metric
         timestamp = int(time.mktime(event.timestamp.timetuple()))
-        data = []
         for s, value in event.stats.iteritems():
             path = '%s.%s' % (metric, s)
             d = (path, (timestamp, value))
-            data.append(d)
+            self._metrics.append(d)
 
-        # wire protocol is a 4-byte length, followed by pickled representation,
-        # see: http://graphite.readthedocs.org/en/1.0/feeding-carbon.html
-        payload = pickle.dumps(data)
-        header = struct.pack("!L", len(payload))
-        message = header + payload
-        self.sock.sendall(message)
+        self.flush()

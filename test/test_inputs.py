@@ -83,4 +83,4 @@ class FileTests(InputTests):
             conf = {'path': 'test*.log'}
             self.create(conf)
 
-            q = self.waitForQueue(events=0)
+            self.waitForQueue(events=0)
