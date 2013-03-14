@@ -7,7 +7,7 @@ import json
 import gevent
 import gevent.event
 import gevent.monkey
-gevent.monkey.patch_thread()
+gevent.monkey.patch_all()
 import logging
 import logging.config
 import signal

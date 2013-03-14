@@ -11,7 +11,8 @@ class File(Output):
 
     When a log is rolled, a 'virtual' event will be generated with the tag
     'fileroll', and the field 'filename' which can be used by further outputs to
-    process a log file when it rolls (eg. batch upload to S3).
+    process a log file when it rolls (eg. batch upload to S3). This event contains
+    a 'trigger' field containing the original event that caused the log roll.
 
     :param string filename: the log filename (required). You can use event
       format values in this (eg. 'output-{program}.log')
@@ -24,12 +25,17 @@ class File(Output):
         self.filename = filename
         self.max_size = max_size
         self.max_count = max_count
+        if compress is True:
+            compress = 'gz'
+        elif compress is None:
+            compress = False
+        assert compress in (False, 'gz',)
         self.compress = compress
 
     def process(self, event):
         filename = event.format(self.filename)
         if self.max_size and os.path.exists(filename) and os.path.getsize(filename) > self.max_size:
-            self._rotate(filename)
+            self._rotate(filename, event)
 
         dirname = os.path.dirname(filename)
         if dirname and not os.path.exists(dirname):
@@ -37,7 +43,7 @@ class File(Output):
         with file(filename, 'a') as fout:
             print >>fout, event.to_json()
 
-    def _rotate(self, filename):
+    def _rotate(self, filename, trigger):
         suffix = ''
         if self.compress == 'gz':
             suffix = '.'+self.compress
@@ -66,10 +72,10 @@ class File(Output):
             self._gz(filename+'.1')
 
         # emit 'virtual' event for rolled log file
-        self.output.put(Event(tags=['fileroll'], filename=roll_first))
+        self.output.put(Event(tags=['fileroll'], filename=roll_first, trigger=trigger))
 
     def _gz(self, filename):
         self.logger.debug('Gzipping %s' % (filename,))
         ps = subprocess.Popen(['gzip', filename])
         while ps.poll() is None:
-            gevent.sleep()
+            gevent.sleep(0.01)

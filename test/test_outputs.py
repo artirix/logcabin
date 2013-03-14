@@ -19,7 +19,7 @@ from logcabin.context import DummyContext
 from logcabin.outputs import elasticsearch, file as fileoutput, graphite, log, \
     mongodb, perf, s3, zeromq
 
-from testhelper import TempDirectory, assertEventEquals, ANY
+from testhelper import TempDirectory, assertEventEquals
 
 class OutputTests(TestCase):
     def create(self, conf={}):
@@ -98,7 +98,7 @@ class FileTests(OutputTests):
             # assert the 'fileroll' event is generated
             self.assert_(self.output.qsize())
             events = [self.output.get() for i in xrange(self.output.qsize())]
-            assertEventEquals(self, Event(tags=['fileroll'], filename='output.log.1'), events[1])
+            assertEventEquals(self, Event(tags=['fileroll'], filename='output.log.1', trigger=self.events[1]), events[1])
 
     def test_compress(self):
         with TempDirectory():
