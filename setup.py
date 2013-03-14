@@ -1,6 +1,31 @@
-# -*- coding: utf-8 -*-
+#!/usr/bin/env python
 
 from setuptools import setup, find_packages
+from setuptools import Command
+
+class tag(Command):
+    """Tag git release."""
+
+    description = __doc__
+    user_options = []
+
+    def initialize_options(self):
+        pass
+
+    def finalize_options(self):
+        pass
+
+    def run(self):
+        import logcabin
+        import versiontools
+        import subprocess
+        version = versiontools.format_version(logcabin.__version__)
+        ret = subprocess.call(['git', 'tag', '-a', version, '-m', version])
+        if ret:
+            raise SystemExit("git tag failed")
+        ret = subprocess.call(['git', 'push', '--tags'])
+        if ret:
+            raise SystemExit("git push --tags failed")
 
 setup(
     name="logcabin",
@@ -30,5 +55,8 @@ setup(
     entry_points={
         'console_scripts':
         ['logcabin = logcabin:main']
+    },
+    cmdclass={
+        'tag': tag,
     },
 )
