@@ -64,6 +64,12 @@ Contributions welcome! Please:
 
 Changelog
 ---------
+0.1b9
+
+- Yield in input stages for better behaviour
+
+- Improve exception catching
+
 0.1b8
 
 - Robustness and general bug fixes
