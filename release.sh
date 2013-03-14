@@ -11,6 +11,7 @@ rm changelog
 
 git add README.rst logcabin/__init__.py
 git commit -m $VERSION
+git push
 python setup.py release
 
 echo "$VERSION released"
