@@ -64,6 +64,10 @@ Contributions welcome! Please:
 
 Changelog
 ---------
+0.1b8
+
+- Robustness and general bug fixes
+
 0.1b7
 
 - Add support to stats for wildcarding and nested fields
