@@ -1,5 +1,6 @@
 from ..event import Event
 from .input import Input
+import gevent
 import zmq.green as zmq
 
 class Zeromq(Input):
@@ -33,6 +34,7 @@ class Zeromq(Input):
                 data = self.sock.recv()
                 self.logger.debug('Received: %r' % data)
                 self.output.put(Event(data=data))
+                gevent.sleep() # yield for other stages
         finally:
             # cleanup
             self.sock.close()

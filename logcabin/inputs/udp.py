@@ -1,3 +1,4 @@
+import gevent
 import gevent.socket
 
 from ..event import Event
@@ -23,3 +24,4 @@ class Udp(Input):
             data = self.sock.recv(4096)
             self.logger.debug('Received: %r' % data)
             self.output.put(Event(data=data))
+            gevent.sleep() # yield for other stages

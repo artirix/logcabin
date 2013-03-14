@@ -1,5 +1,5 @@
 # import the inputs and an output
-from flows import Fanin
+from flow import Fanin
 from inputs.udp import Udp
 from inputs.zeromq import Zeromq
 from outputs.log import Log
