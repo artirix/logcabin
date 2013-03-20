@@ -2,10 +2,11 @@ from unittest import TestCase
 import gevent
 from gevent.queue import Queue
 import datetime
+import mock
 
 from logcabin.event import Event
 from logcabin.context import DummyContext
-from logcabin.filters import json, regex, mutate, stats, syslog
+from logcabin.filters import json, mutate, python, regex, stats, syslog
 
 from testhelper import assertEventEquals, about, between
 
@@ -100,6 +101,19 @@ class MutateTests(FilterTests):
             [Event(a=1, b=2)])
         q = self.wait()
         assertEventEquals(self, Event(b=2), q[0])
+
+class PythonTests(FilterTests):
+    cls = python.Python
+
+    def test_simple(self):
+        function = mock.Mock()
+        ev = Event(data='abc123')
+        self.create({'function': function},
+            [ev])
+        q = self.wait()
+        
+        assertEventEquals(self, Event(data='abc123'), q[0])
+        function.assert_called_with(ev)
 
 class StatsTests(FilterTests):
     cls = stats.Stats
