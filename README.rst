@@ -64,6 +64,10 @@ Contributions welcome! Please:
 
 Changelog
 ---------
+0.1b10
+
+- Add Python stage for custom python code
+
 0.1b9
 
 - Yield in input stages for better behaviour
