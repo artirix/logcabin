@@ -48,4 +48,6 @@ def stddev(li, mean):
     >>> stddev([3, 3.5, 4], 3.5)
     5.0
     """
+    if not li:
+        return None
     return math.sqrt(sum(x*x for x in li) - mean*mean)

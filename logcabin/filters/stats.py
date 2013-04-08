@@ -37,11 +37,14 @@ class Stats(Filter):
         be formatting into the field names. Values can be an event field, nested
         path to a field (separated by .) and can contain wildcard '*', to indicate
         generating statistics from any numerical fields.
+    :param boolean zero: output zero for previously seen metrics (useful to disambiguate
+        no activity and output broken)
     """
-    def __init__(self, period=5, metrics=None):
+    def __init__(self, period=5, metrics=None, zero=True):
         super(Stats, self).__init__()
         # configuration
         self.metrics = metrics or {}
+        self.zero = zero
 
         # transient state
         self.timers = {}
@@ -84,7 +87,7 @@ class Stats(Filter):
         # calculate period for precise rate calculation
         period = now - self.last
         for k, timer in self.timers.iteritems():
-            stats = timer.stats(period)
+            stats = timer.stats(period, self.zero)
             if stats:
                 count += 1
                 if self.output:
@@ -105,8 +108,8 @@ class Timer(object):
         # then an automatic downsampling would make sense here.
         self.values.append(v)
 
-    def stats(self, period):
-        if self.values:
+    def stats(self, period, zero):
+        if self.values or zero:
             d = {}
             d['count'] = len(self.values)
             d['rate'] = d['count'] / period

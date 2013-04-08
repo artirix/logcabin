@@ -34,9 +34,11 @@ class FilterTests(TestCase):
             while self.output.qsize() < events:
                 gevent.sleep(0.0)
 
-        self.i.stop()
         if events:
             return [self.output.get() for n in xrange(events)]
+
+    def tearDown(self):
+        self.i.stop()
 
 class JsonTests(FilterTests):
     cls = json.Json
@@ -166,6 +168,9 @@ class StatsTests(FilterTests):
             tags=['stat'],
         )
         assertEventEquals(self, expected, q[1])
+
+        # wait for further two 'zero' stats
+        q = self.wait(events=2)
 
     def test_wildcard(self):
         self.create({'period': 0.1, 'metrics': {'rails.{controller}.{action}.{0}': '*'}},
