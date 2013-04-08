@@ -64,6 +64,10 @@ Contributions welcome! Please:
 
 Changelog
 ---------
+0.1b11
+
+- Stats filter: zero=True/False option to generate zero data points
+
 0.1b10
 
 - Add Python stage for custom python code
