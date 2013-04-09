@@ -64,6 +64,10 @@ Contributions welcome! Please:
 
 Changelog
 ---------
+0.1b12
+
+- graphite output should reconnect on socket errors
+
 0.1b11
 
 - Stats filter: zero=True/False option to generate zero data points
