@@ -29,7 +29,12 @@ class Graphite(Output):
         payload = pickle.dumps(self._metrics)
         header = struct.pack("!L", len(payload))
         message = header + payload
-        self.sock.sendall(message)
+        try:
+            self.sock.sendall(message)
+        except socket.error:
+            self.sock.close()
+            self.connect()
+            self.sock.sendall(message)
         self._metrics = []
 
     def connect(self):
@@ -38,7 +43,7 @@ class Graphite(Output):
                 self.sock = socket.socket()
                 self.sock.connect((self.host, self.port))
                 break
-            except:
+            except socket.error:
                 self.logger.warn("Couldn't connect to graphite: %s:%s, retrying in 1s" % (self.host, self.port))
                 gevent.sleep(1.0)
 

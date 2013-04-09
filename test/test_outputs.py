@@ -34,6 +34,8 @@ class OutputTests(TestCase):
         with gevent.Timeout(timeout):
             while self.input.qsize():
                 gevent.sleep()
+
+    def tearDown(self):
         self.i.stop()
 
 class LogTests(OutputTests):
@@ -108,6 +110,7 @@ class FileTests(OutputTests):
 
             map(self.input.put, self.events)
             self.waitForEmpty()
+            self.i.stop()
 
             self.assertFileContents(self.events[0].to_json()+'\n', 'output.log.1.gz')
             self.assertFileContents(self.events[1].to_json()+'\n', 'output.log')
@@ -199,6 +202,7 @@ class GraphiteTests(OutputTests):
 
         self.input.put(Event(metric='a.b.c', stats={'mean': 1.5, 'min': 1.0}))
         self.waitForEmpty()
+        self.i.stop()
 
         self.assertEquals(0, self.input.qsize())
         server.stop()
@@ -227,6 +231,7 @@ class GraphiteTests(OutputTests):
         self.waitForEmpty()
 
         self.assertEquals(0, self.input.qsize())
+        self.i.stop()
         server.stop()
         self.assertEquals(1, len(received))
 
