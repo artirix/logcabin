@@ -7,6 +7,7 @@ class Syslog(Filter):
     """Parse a syslog encoded field.
 
     This sets the fields:
+    
     - timestamp
     - facility
     - severity

@@ -3,7 +3,7 @@ from .filter import Filter
 class Python(Filter):
     """Call out to a python function for adding custom functionality.
 
-    :param string function: callable taking the event as an argument
+    :param callable function: callable taking the event as an argument
     """
 
     def __init__(self, function, on_error='reject'):

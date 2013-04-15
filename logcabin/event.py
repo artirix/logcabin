@@ -61,7 +61,7 @@ class Event(dict):
         return self.get('tags', [])
 
     def __getattr__(self, k):
-        """Attribute accessor for the dictionary elements, with None as default. Default makes
+        """Attribute getter for the dictionary elements, with None as default. Default makes
         safe to missing attributes in conditionals, etc.
 
         >>> Event().a
@@ -69,6 +69,17 @@ class Event(dict):
         2
         """
         return self.get(k)
+
+    def __setattr__(self, k, v):
+        """Attribute setter for the dictionary elements.
+
+        >>> ev = Event(timestamp=datetime(2013, 1, 1, 1, 2, 3, 45))
+        >>> ev.a = 2
+        >>> ev.b = ['1']
+        >>> str(ev)
+        "Event({'a': 2, 'b': ['1'], 'timestamp': datetime.datetime(2013, 1, 1, 1, 2, 3, 45)})"
+        """
+        self[k] = v
 
     def to_json(self):
         """Serialize the event to a json string.
