@@ -6,7 +6,7 @@ import mock
 
 from logcabin.event import Event
 from logcabin.context import DummyContext
-from logcabin.filters import json, mutate, python, regex, stats, syslog
+from logcabin.filters import json, mutate, python, regex, stats, syslog, url
 
 from testhelper import assertEventEquals, about, between
 
@@ -116,6 +116,22 @@ class PythonTests(FilterTests):
         
         assertEventEquals(self, Event(data='abc123'), q[0])
         function.assert_called_with(ev)
+
+class UrlTests(FilterTests):
+    cls = url.Url
+
+    def test_match(self):
+        self.create({'field': 'data'},
+            [Event(data='abc?a=1%2C2&b=2+3')])
+        q = self.wait()
+        assertEventEquals(self, Event(path='abc', a='1,2', b='2 3'), q[0])
+
+    def test_no_match(self):
+        self.create({'field': 'data',
+            'on_error': 'tag'},
+            [Event(data=None)])
+        q = self.wait()
+        self.assertEquals(['error'], q[0].tags)
 
 class StatsTests(FilterTests):
     cls = stats.Stats
