@@ -64,6 +64,14 @@ Contributions welcome! Please:
 
 Changelog
 ---------
+1.0
+
+- Add timestamp rolling to Output File
+
+- Add url unescape filter
+
+- Add event setter and tidy docs
+
 0.1b12
 
 - graphite output should reconnect on socket errors
