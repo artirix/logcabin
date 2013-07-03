@@ -100,7 +100,29 @@ class FileTests(OutputTests):
             # assert the 'fileroll' event is generated
             self.assert_(self.output.qsize())
             events = [self.output.get() for i in xrange(self.output.qsize())]
-            assertEventEquals(self, Event(tags=['fileroll'], filename='output.log.1', trigger=self.events[1]), events[1])
+            assertEventEquals(self, Event(tags=['fileroll'], filename='output.log.1', last=self.events[0], trigger=self.events[1]), events[1])
+
+    def test_timestamped(self):
+        events = [
+            Event(message='1', timestamp=datetime(2013, 1, 1, 23, 59, 58)),
+            Event(message='2', timestamp=datetime(2013, 1, 1, 23, 59, 59)),
+            Event(message='3', timestamp=datetime(2013, 1, 2, 0, 0, 0)),
+            Event(message='4', timestamp=datetime(2013, 1, 2, 0, 0, 1))]
+
+        with TempDirectory():
+            self.create({'filename': 'output-{timestamp:%Y%m%d}.log',
+                'compress': 'gz'})
+
+            map(self.input.put, events)
+            self.waitForEmpty()
+
+            self.assertFileContents(events[0].to_json()+'\n'+events[1].to_json()+'\n', 'output-20130101.log.1.gz')
+            self.assertFileContents(events[2].to_json()+'\n'+events[3].to_json()+'\n', 'output-20130102.log')
+
+            # assert the 'fileroll' event is generated
+            self.assertEquals(len(events)+1, self.output.qsize())
+            outputs = [self.output.get() for i in xrange(self.output.qsize())]
+            assertEventEquals(self, Event(tags=['fileroll'], filename='output-20130101.log.1.gz', last=events[1], trigger=events[2]), outputs[2])
 
     def test_compress(self):
         with TempDirectory():

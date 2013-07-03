@@ -2,7 +2,9 @@ from .output import Output
 import os
 import gevent
 import subprocess
+import datetime
 from ..event import Event
+from ..util import Periodic
 
 class File(Output):
     """Log to file.
@@ -31,11 +33,45 @@ class File(Output):
             compress = False
         assert compress in (False, 'gz',)
         self.compress = compress
+        self.last_filename = None
+        self.last_event = None
+
+        if 'timestamp' in self.filename:
+            # if the log file name is timestamped, periodically check if it has
+            # rolled over.
+            self.periodic = Periodic(30, self._check_rotate)
+        else:
+            self.periodic = None
+
+    def _check_rotate(self):
+        now = datetime.datetime.utcnow()
+        filename = self.filename.format(timestamp=now)
+        if self.last_filename and filename != self.last_filename:
+            self._rotate(self.last_filename, self.last_event, self.last_event)
+            self.last_filename = filename 
+
+    def start(self):
+        super(File, self).start()
+        if self.periodic is not None:
+            self.periodic.start()
+
+    def stop(self):
+        if self.periodic is not None:
+            self.periodic.kill()
+            self.periodic.join()
+        super(File, self).stop()
 
     def process(self, event):
         filename = event.format(self.filename)
         if self.max_size and os.path.exists(filename) and os.path.getsize(filename) > self.max_size:
-            self._rotate(filename, event)
+            self._rotate(filename, self.last_event, event)
+
+        if 'timestamp' in self.filename and self.last_filename != filename:
+            if self.last_filename:
+                # file has rolled by timestamp
+                self._rotate(self.last_filename, self.last_event, event)
+            self.last_filename = filename
+        self.last_event = event
 
         dirname = os.path.dirname(filename)
         if dirname and not os.path.exists(dirname):
@@ -43,7 +79,10 @@ class File(Output):
         with file(filename, 'a') as fout:
             print >>fout, event.to_json()
 
-    def _rotate(self, filename, trigger):
+    def _rotate(self, filename, last, trigger):
+        if not os.path.exists(filename):
+            return
+
         suffix = ''
         if self.compress == 'gz':
             suffix = '.'+self.compress
@@ -72,7 +111,7 @@ class File(Output):
             self._gz(filename+'.1')
 
         # emit 'virtual' event for rolled log file
-        self.output.put(Event(tags=['fileroll'], filename=roll_first, trigger=trigger))
+        self.output.put(Event(tags=['fileroll'], filename=roll_first, last=last or trigger, trigger=trigger))
 
     def _gz(self, filename):
         self.logger.debug('Gzipping %s' % (filename,))
