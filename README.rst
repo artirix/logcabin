@@ -64,6 +64,10 @@ Contributions welcome! Please:
 
 Changelog
 ---------
+1.0.2
+
+- Fix bug in when setting File statedir
+
 1.0.1
 
 - Add resume to input File tailing
