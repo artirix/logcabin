@@ -4,6 +4,7 @@ import gevent
 import gevent.socket as socket
 from gevent.queue import Queue
 import random
+import os
 
 from logcabin.event import Event
 from logcabin.context import DummyContext
@@ -77,6 +78,69 @@ class FileTests(InputTests):
             q = self.waitForQueue(events=2)
             assertEventEquals(self, Event(data='abc'), q[0])
             assertEventEquals(self, Event(data='def'), q[1])
+
+    def test_rolling(self):
+        with TempDirectory():
+            with file('test1.log', 'w') as fin:
+                print >>fin, 'abc'
+
+            conf = {'path': 'test*.log'}
+            self.create(conf)
+
+            gevent.sleep(0.01)
+            os.rename('test1.log', 'test1.log.1')
+            with file('test1.log', 'w') as fin:
+                print >>fin, 'def'
+
+            q = self.waitForQueue(events=2)
+            assertEventEquals(self, Event(data='abc'), q[0])
+            assertEventEquals(self, Event(data='def'), q[1])
+
+    def test_multiple(self):
+        with TempDirectory():
+            conf = {'path': 'test*.log'}
+            self.create(conf)
+
+            with file('test1.log', 'w') as fin:
+                print >>fin, 'abc'
+            with file('test2.log', 'w') as fin:
+                print >>fin, 'abc'
+
+            q = self.waitForQueue(events=2)
+            assertEventEquals(self, Event(data='abc'), q[0])
+            assertEventEquals(self, Event(data='abc'), q[1])
+
+    def test_resume(self):
+        with TempDirectory():
+            with file('test1.log', 'w') as fin:
+                print >>fin, 'abc'
+            conf = {'path': 'test*.log'}
+            self.create(conf)
+
+            q = self.waitForQueue(events=1)
+            assertEventEquals(self, Event(data='abc'), q[0])
+
+            with file('test1.log', 'a') as fin:
+                print >>fin, 'def'
+
+            self.create(conf)
+            q = self.waitForQueue(events=1)
+            assertEventEquals(self, Event(data='def'), q[0])
+
+    def test_truncated(self):
+        with TempDirectory():
+            conf = {'path': 'test*.log'}
+            self.create(conf)
+
+            with file('test1.log', 'w') as fin:
+                print >>fin, 'abc'
+                print >>fin, 'def'
+            gevent.sleep(0.01)
+            with file('test1.log', 'w') as fin:
+                print >>fin, 'ghi'
+
+            q = self.waitForQueue(events=3)
+            assertEventEquals(self, Event(data='abc'), q[0])
 
     def test_missing(self):
         with TempDirectory():
