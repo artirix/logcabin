@@ -64,6 +64,10 @@ Contributions welcome! Please:
 
 Changelog
 ---------
+1.0.1
+
+- Add resume to input File tailing
+
 1.0
 
 - Add timestamp rolling to Output File
