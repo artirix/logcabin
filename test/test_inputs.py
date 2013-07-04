@@ -127,6 +127,24 @@ class FileTests(InputTests):
             q = self.waitForQueue(events=1)
             assertEventEquals(self, Event(data='def'), q[0])
 
+    def test_resume_statedir(self):
+        with TempDirectory():
+            os.mkdir('state')
+            with file('test1.log', 'w') as fin:
+                print >>fin, 'abc'
+            conf = {'path': 'test*.log', 'statedir': 'state'}
+            self.create(conf)
+
+            q = self.waitForQueue(events=1)
+            assertEventEquals(self, Event(data='abc'), q[0])
+
+            with file('test1.log', 'a') as fin:
+                print >>fin, 'def'
+
+            self.create(conf)
+            q = self.waitForQueue(events=1)
+            assertEventEquals(self, Event(data='def'), q[0])
+
     def test_truncated(self):
         with TempDirectory():
             conf = {'path': 'test*.log'}

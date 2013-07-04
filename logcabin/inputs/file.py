@@ -38,7 +38,7 @@ class Tail(gevent.Greenlet):
     def tail(self):
         self._ensure_open()
         if os.path.exists(self.offset_path):
-            offset = file(self.path + '.offset', 'r').read()
+            offset = file(self.offset_path).read()
             offset = int(offset)
             self.logger.debug("Seeking in %s to %d" % (self.path, offset))
             self.fin.seek(offset)
