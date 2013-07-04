@@ -5,7 +5,7 @@ VERSION=$(python setup.py --version)
 
 # make changelog
 echo -e "$VERSION\n" > changelog
-git log --format='- %s%n' $(git tag -l | tail -1).. >> changelog
+git log --format='- %s%n' $(git describe --abbrev=0).. >> changelog
 sublime -w README.rst:67 changelog
 rm changelog
 
