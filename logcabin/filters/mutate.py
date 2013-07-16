@@ -9,7 +9,7 @@ class Mutate(Filter):
     :param map rename: fields to rename (a: b renames b to a) (optional)
     :param list unset: fields to unset (optional)
     """
-    def __init__(self, set={}, rename={}, unset=[]):
+    def __init__(self, set={}, rename={}, copy={}, unset=[]):
         super(Mutate, self).__init__()
         self.sets = set
         assert type(self.sets) == dict
