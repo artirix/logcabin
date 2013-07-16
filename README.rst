@@ -64,6 +64,10 @@ Contributions welcome! Please:
 
 Changelog
 ---------
+1.0.3
+
+- add copy action in Mutate object
+
 1.0.2
 
 - Fix bug in when setting File statedir
