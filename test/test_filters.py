@@ -98,6 +98,12 @@ class MutateTests(FilterTests):
         q = self.wait()
         assertEventEquals(self, Event(b=1), q[0])
 
+    def test_copy(self):
+        self.create({'copy': {'b': 'a', 'd': 'c'}},
+            [Event(a=1, c=5)])
+        q = self.wait()
+        assertEventEquals(self, Event(b=1, a=1, c=5, d=5), q[0])
+
     def test_unset(self):
         self.create({'unset': ['a', 'c']},
             [Event(a=1, b=2)])
