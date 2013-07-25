@@ -29,6 +29,7 @@ class Graphite(Output):
         payload = pickle.dumps(self._metrics)
         header = struct.pack("!L", len(payload))
         message = header + payload
+        self.logger.debug("Flushing %d metrics to graphite %s:%d" % (len(self._metrics), self.host, self.port))
         try:
             self.sock.sendall(message)
         except socket.error:
