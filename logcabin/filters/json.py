@@ -18,14 +18,13 @@ class Json(Filter):
 
     def process(self, event):
         if self.field in event:
-            if self.consume:
-                data = event.pop(self.field)
-            else:
-                data = event[self.field]
-
             try:
+                data = event[self.field]
                 j = json.loads(data)
                 self.logger.debug('JSON decoded: %s' % j)
+                if self.consume:
+                    del event[self.field]
+
                 event.update(j)
                 return True
             except ValueError as ex:
