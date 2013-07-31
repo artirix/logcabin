@@ -64,6 +64,12 @@ Contributions welcome! Please:
 
 Changelog
 ---------
+1.0.4
+
+- Improve error messages on unparseable Json
+
+- Add some debug logging to Graphite
+
 1.0.3
 
 - add copy action in Mutate object
