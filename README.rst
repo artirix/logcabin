@@ -64,6 +64,10 @@ Contributions welcome! Please:
 
 Changelog
 ---------
+1.0.6
+
+- Switch to milliseconds - more ISO8601 standard
+
 1.0.5
 
 - Save precious bytes on json output
