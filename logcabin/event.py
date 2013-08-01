@@ -13,7 +13,8 @@ class JSONEncoder(json.JSONEncoder):
                 obj = obj.astimezone(dateutil.tz.tzutc()).replace(tzinfo=None)
 
             # isoformat doesn't produce consistent output when microsecond=0
-            return obj.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+            ms = '.%03dZ' % (obj.microsecond/1000)
+            return obj.strftime("%Y-%m-%dT%H:%M:%S") + ms
         else:
             return super(JSONEncoder, self).default(obj)
 
@@ -88,9 +89,9 @@ class Event(dict):
         >>> with patch('logcabin.event.datetime') as m:
         ...     m.utcnow.side_effect = lambda: datetime(2013, 1, 1, 2, 34, 56, 789012)
         ...     Event(field='x').to_json()
-        '{"timestamp":"2013-01-01T02:34:56.789012Z","field":"x"}'
+        '{"timestamp":"2013-01-01T02:34:56.789Z","field":"x"}'
         >>> Event(timestamp=datetime(2013, 1, 1, 1, 2, 3, 45)).to_json()
-        '{"timestamp":"2013-01-01T01:02:03.000045Z"}'
+        '{"timestamp":"2013-01-01T01:02:03.000Z"}'
         """
         return json.dumps(self, cls=JSONEncoder, separators=(',', ':'))
 
