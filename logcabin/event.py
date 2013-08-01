@@ -88,11 +88,11 @@ class Event(dict):
         >>> with patch('logcabin.event.datetime') as m:
         ...     m.utcnow.side_effect = lambda: datetime(2013, 1, 1, 2, 34, 56, 789012)
         ...     Event(field='x').to_json()
-        '{"timestamp": "2013-01-01T02:34:56.789012Z", "field": "x"}'
+        '{"timestamp":"2013-01-01T02:34:56.789012Z","field":"x"}'
         >>> Event(timestamp=datetime(2013, 1, 1, 1, 2, 3, 45)).to_json()
-        '{"timestamp": "2013-01-01T01:02:03.000045Z"}'
+        '{"timestamp":"2013-01-01T01:02:03.000045Z"}'
         """
-        return json.dumps(self, cls=JSONEncoder)
+        return json.dumps(self, cls=JSONEncoder, separators=(',', ':'))
 
     def format(self, fmt, args=None, raise_missing=False):
         """Format the event using string.format notation.
