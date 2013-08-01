@@ -64,6 +64,10 @@ Contributions welcome! Please:
 
 Changelog
 ---------
+1.0.5
+
+- Save precious bytes on json output
+
 1.0.4
 
 - Improve error messages on unparseable Json
