@@ -64,6 +64,10 @@ Contributions welcome! Please:
 
 Changelog
 ---------
+1.0.7
+
+- Add some debugging logging
+
 1.0.6
 
 - Switch to milliseconds - more ISO8601 standard
