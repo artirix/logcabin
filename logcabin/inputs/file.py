@@ -33,7 +33,9 @@ class Tail(gevent.Greenlet):
 
     def _write_state_file(self):
         with file(self.offset_path, 'w') as fout:
-            print >>fout, self.fin.tell()
+            offset = self.fin.tell()
+            self.logger.debug("Writing state file: %s at offset %d" % (self.offset_path, offset))
+            print >>fout, offset
 
     def tail(self):
         self._ensure_open()

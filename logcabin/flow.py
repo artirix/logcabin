@@ -1,5 +1,6 @@
 from common import ProcessingStage, MultiStage
 from util import BroadcastQueue
+import inspect
 
 class Fanin(MultiStage):
     """
@@ -159,8 +160,11 @@ class If(ProcessingStage, MultiStage):
         super(If, self).__init__(on_error=on_error)
         if isinstance(condition, str):
             # python code as string
+            self.condition_text = condition
             code = compile(condition, 'string', 'eval')
             condition = lambda ev: eval(code, {}, ev)
+        else:
+            self.condition_text = inspect.getsource(condition)
         self.condition = condition
 
     # configuration contexts
@@ -190,7 +194,9 @@ class If(ProcessingStage, MultiStage):
 
     def process(self, event):
         # pass the event into the sub-queue for the applicable pipeline
-        if self.condition(DefaultDictProxy(event)):
+        result = self.condition(DefaultDictProxy(event))
+        self.logger.debug("Condition: %s evaluated to %s" % (self.condition_text, result))
+        if result:
             self.branch.input.put(event)
             # sub-pipeline will dequeue
             return False

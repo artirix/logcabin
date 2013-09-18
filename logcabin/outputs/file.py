@@ -77,7 +77,9 @@ class File(Output):
         if dirname and not os.path.exists(dirname):
             os.makedirs(dirname)
         with file(filename, 'a') as fout:
-            print >>fout, event.to_json()
+            d = event.to_json()
+            self.logger.debug('Writing to %s: %s' % (filename, d))
+            print >>fout, d
 
     def _rotate(self, filename, last, trigger):
         if not os.path.exists(filename):
