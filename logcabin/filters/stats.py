@@ -24,14 +24,6 @@ class Stats(Filter):
 
     This is emitted as a single event, every period.
 
-    Example::
-
-        Stats(metrics={'rails.{controller}.{action}.duration': 'duration'})
-
-    Wildcards can be used to pull out nested structures::
-
-        Stats(metrics={'app.{1}': 'timings.*'})
-
     :param integer period: period to report stats, in seconds
     :param map metrics: field names => values. Any fields from the events can
         be formatting into the field names. Values can be an event field, nested
@@ -39,6 +31,14 @@ class Stats(Filter):
         generating statistics from any numerical fields.
     :param boolean zero: output zero for previously seen metrics (useful to disambiguate
         no activity and output broken)
+
+    Example::
+
+        Stats(metrics={'rails.{controller}.{action}.duration': 'duration'})
+
+    Wildcards can be used to pull out nested structures::
+
+        Stats(metrics={'app.{1}': 'timings.*'})
     """
     def __init__(self, period=5, metrics=None, zero=True):
         super(Stats, self).__init__()

@@ -13,6 +13,10 @@ class Regex(Filter):
 
     :param string regex: the regular expression
     :param string field: the field to run the regex on (default: data)
+
+    Example::
+
+        Regex(regex='(?P<timestamp>.+) - (?P<message>.+)')
     """
 
     def __init__(self, regex, field='data', on_error='reject'):

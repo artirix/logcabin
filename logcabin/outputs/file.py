@@ -21,6 +21,10 @@ class File(Output):
     :param integer max_size: maximum size of file before rolling to .1, .2, etc.
     :param integer max_count: maximum number of rolled files (default: 10)
     :param string compress: set to 'gz' to compress the file after rolling.
+
+    Example::
+
+        File(filename='mylogs.log', max_size=10, compress='gz')
     """
     def __init__(self, filename, max_size=None, max_count=10, compress=None):
         super(File, self).__init__()

@@ -8,15 +8,15 @@ import json
 class Elasticsearch(Output):
     """Outputs to an elasticsearch index.
 
-    Example configuration for kibana::
-
-        Mutate(rename={'@timestamp': 'timestamp', '@message': 'message'})
-        Elasticsearch(index='logstash-{@timestamp:%Y.%m.%d}', type='event')
-
     :param string host: elasticsearch host
     :param integer port: elasticsearch port
     :param string index: (required) elasticsearch index. This can be formatted by fields in the event.
     :param string type: (required) elasticsearch type. This can be formatted by fields in the event.
+
+    Example configuration for kibana::
+
+        Mutate(rename={'@timestamp': 'timestamp', '@message': 'message'})
+        Elasticsearch(index='logstash-{@timestamp:%Y.%m.%d}', type='event')
     """
 
     RETRIES = 10

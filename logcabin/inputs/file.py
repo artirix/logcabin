@@ -103,6 +103,10 @@ class File(Input):
     :param string path: path on the file system to the log file(s), wildcards may
       be used to match multiple files.
     :param string statedir: writable directory to store state for files
+
+    Example::
+
+        File(path='/var/log/syslog')
     """
 
     def __init__(self, path, statedir=None):

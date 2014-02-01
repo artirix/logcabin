@@ -8,6 +8,18 @@ class Mutate(Filter):
     :param map set: fields to set (optional). The values if strings may format other fields from the event.
     :param map rename: fields to rename (a: b renames b to a) (optional)
     :param list unset: fields to unset (optional)
+
+    Example::
+
+        Mutate(set={'fullname': '{first} {last}'})
+
+    Renaming::
+
+        Mutate(rename={'@timestamp': 'timestamp', '@message': 'message'})
+
+    Unsetting::
+
+        Mutate(unset=['junk', 'rubbish'])
     """
     def __init__(self, set={}, rename={}, copy={}, unset=[]):
         super(Mutate, self).__init__()

@@ -18,6 +18,10 @@ class Syslog(Filter):
 
     :param string field: the field containing the syslog message (default: data)
     :param boolean consume: whether to remove the field after decoding (default: true)
+
+    Example::
+
+        Syslog()
     """
 
     def __init__(self, field='data', consume=True, on_error='reject'):

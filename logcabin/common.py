@@ -18,8 +18,6 @@ class Stage(object):
     """
 
     def __init__(self, on_error='reject'):
-        # self.input = input
-        # self.output = output
         self.logger = logging.getLogger(type(self).__name__)
         self.busy = threading.Lock()
         self.on_error = on_error
@@ -77,7 +75,7 @@ class SpawnedStage(Stage):
 
     def stop(self):
         """Stop the stage from running."""
-        # if necesssary, avoid to more gracefully handle termination in the stage
+        # if necessary, avoid to more gracefully handle termination in the stage
         with self.busy:
             self.g.kill()
             self.g.join()

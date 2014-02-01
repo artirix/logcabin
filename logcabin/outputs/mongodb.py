@@ -8,6 +8,10 @@ class Mongodb(Output):
     :param integer port: mongodb port
     :param string database: mongodb database
     :param string collection: mongodb collection
+
+    Example::
+
+        Mongodb(host="mongodb", database="logs")
     """
 
     def __init__(self, host='localhost', port=27017, database='test', collection='events'):

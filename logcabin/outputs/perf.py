@@ -7,6 +7,10 @@ class Perf(Output):
     """Simple performance counter output.
 
     :param integer period: interval between reports in seconds
+
+    Example::
+
+        Perf(period=5)
     """
     def __init__(self, period=60):
         super(Perf, self).__init__()

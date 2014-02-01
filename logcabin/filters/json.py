@@ -9,6 +9,10 @@ class Json(Filter):
 
     :param string field: the field containing the json (default: data)
     :param boolean consume: whether to remove the field after decoding (default: true)
+
+    Example::
+
+        Json()
     """
 
     def __init__(self, field='data', consume=True, on_error='reject'):

@@ -11,6 +11,10 @@ class Graphite(Output):
 
     :param string host: graphite server hostname
     :param string port: graphite server port
+
+    Example::
+
+        Graphite(host='graphite')
     """
 
     def __init__(self, host='localhost', port=2004):

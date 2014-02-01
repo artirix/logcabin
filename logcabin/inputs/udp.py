@@ -10,6 +10,10 @@ class Udp(Input):
     Creates events with the field 'data' set to the packet received.
 
     :param integer port: listening port
+
+    Example::
+
+        Udp(port=6000)
     """
 
     def __init__(self, port):

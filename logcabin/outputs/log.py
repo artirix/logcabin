@@ -3,11 +3,11 @@ from .output import Output
 class Log(Output):
     """Logging output.
 
+    :param string message: message to log (optional)
+
     Example::
 
         Log(message="event:")
-
-    :param string message: message to log (optional)
     """
     def __init__(self, message=''):
         super(Log, self).__init__()

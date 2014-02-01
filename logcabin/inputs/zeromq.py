@@ -11,6 +11,10 @@ class Zeromq(Input):
     :param string address: zeromq address to bind on (default: `tcp://*:2120`)
     :param string mode: connect or bind (default: bind)
     :param string socket: PULL or SUB (default: PULL)
+
+    Example::
+
+        Zeromq(address='tcp://*:2121', mode='bind', socker='PULL')
     """
     def __init__(self, address='tcp://*:2120', mode='bind', socket='PULL'):
         if mode not in ('connect', 'bind'):
