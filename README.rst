@@ -64,6 +64,10 @@ Contributions welcome! Please:
 
 Changelog
 ---------
+1.0.8
+
+- Add examples to docs.
+
 1.0.7
 
 - Add some debugging logging
