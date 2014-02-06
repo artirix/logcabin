@@ -3,5 +3,5 @@ pyzmq==2.2.0.1
 nose
 mock
 boto
-pymongo
+pymongo>=2.4
 python-dateutil

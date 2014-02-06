@@ -12,6 +12,7 @@ import time
 from datetime import datetime
 import cPickle as pickle
 import zmq.green as zmq
+import urllib2
 
 from logcabin.event import Event
 from logcabin.context import DummyContext
@@ -19,7 +20,7 @@ from logcabin.context import DummyContext
 from logcabin.outputs import elasticsearch, file as fileoutput, graphite, log, \
     mongodb, perf, s3, zeromq
 
-from testhelper import TempDirectory, assertEventEquals
+from testhelper import TempDirectory, assertEventEquals, ANY
 
 class OutputTests(TestCase):
     def create(self, conf={}):
@@ -61,7 +62,31 @@ class ElasticsearchTests(OutputTests):
             self.waitForEmpty()
             i.stop()
 
-            self.assert_(urlopen_mock.called)
+            urlopen_mock.assert_called_once_with('http://localhost:9200/test/event/', data=ANY)
+
+    def test_400_bad_request(self):
+        with mock.patch('urllib2.urlopen') as urlopen_mock:
+            def raise_400(url, data):
+                raise urllib2.HTTPError(url, 400, "Bad Request", {}, None)
+            urlopen_mock.side_effect = raise_400
+            i = self.create({'index': 'test', 'type': 'event'})
+
+            self.input.put(Event(field='x'))
+            self.waitForEmpty()
+            i.stop()
+
+            urlopen_mock.assert_called_once_with(ANY, data=ANY)
+
+    def test_empty_type(self):
+        with mock.patch('urllib2.urlopen') as urlopen_mock:
+            urlopen_mock.return_value.read.return_value = json.dumps({'_type': 'event', '_id': 'w0HnGYHFSOS7EBIWnxBcEg', 'ok': True, '_version': 1, '_index': 'test'})
+            i = self.create({'index': 'test', 'type': ''})
+
+            self.input.put(Event(field='x'))
+            self.waitForEmpty()
+            i.stop()
+
+            self.failIf(urlopen_mock.called)
 
 class FileTests(OutputTests):
     cls = fileoutput.File

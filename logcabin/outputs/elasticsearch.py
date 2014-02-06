@@ -32,6 +32,11 @@ class Elasticsearch(Output):
         data = event.to_json()
         index = event.format(self.index)
         itype = event.format(self.type)
+        if not index:
+            raise ValueError("index is empty")
+        if not itype:
+            raise ValueError("type is empty")
+
         url = 'http://%s:%s/%s/%s/' % (self.host, self.port, index, itype)
 
         success = False
@@ -44,6 +49,15 @@ class Elasticsearch(Output):
                 if not success:
                     self.logger.error('Indexing failed: %s' % result)
                 break
+            except urllib2.HTTPError as ex:
+                if ex.getcode() == 400:
+                    # Bad Request - do not retry
+                    self.logger.error("Bad request: %s, not retrying" % (ex,))
+                    break
+                else:
+                    delay *= 2.0
+                    self.logger.warn('Unable to index: %s, retrying in %ds' % (ex, delay))
+                    gevent.sleep(delay)
             except urllib2.URLError as ex:
                 delay *= 2.0
                 self.logger.warn('Unable to index: %s, retrying in %ds' % (ex, delay))
