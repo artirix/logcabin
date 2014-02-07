@@ -64,6 +64,10 @@ Contributions welcome! Please:
 
 Changelog
 ---------
+1.0.9
+
+- elasticsearch output: handle bad requests better. fixes #3.
+
 1.0.8
 
 - Add examples to docs.
