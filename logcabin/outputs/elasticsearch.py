@@ -44,10 +44,9 @@ class Elasticsearch(Output):
         for retry in xrange(self.RETRIES):
             try:
                 res = urllib2.urlopen(url, data=data)
+                # 200 response indicates all is well
+                success = True
                 result = json.load(res)
-                success = result['ok']
-                if not success:
-                    self.logger.error('Indexing failed: %s' % result)
                 break
             except urllib2.HTTPError as ex:
                 if ex.getcode() == 400:

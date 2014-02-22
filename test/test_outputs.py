@@ -55,7 +55,7 @@ class ElasticsearchTests(OutputTests):
 
     def test_log(self):
         with mock.patch('urllib2.urlopen') as urlopen_mock:
-            urlopen_mock.return_value.read.return_value = json.dumps({'_type': 'event', '_id': 'w0HnGYHFSOS7EBIWnxBcEg', 'ok': True, '_version': 1, '_index': 'test'})
+            urlopen_mock.return_value.read.return_value = json.dumps({'_type': 'event', '_id': 'w0HnGYHFSOS7EBIWnxBcEg', '_version': 1, '_index': 'test'})
             i = self.create({'index': 'test', 'type': 'event'})
 
             self.input.put(Event(field='x'))
