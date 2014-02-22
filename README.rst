@@ -64,6 +64,11 @@ Contributions welcome! Please:
 
 Changelog
 ---------
+
+1.0.10
+
+- Fix for breaking change in elasticsearch 1.0. fixes #4.
+
 1.0.9
 
 - elasticsearch output: handle bad requests better. fixes #3.
