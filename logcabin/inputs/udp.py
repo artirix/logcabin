@@ -10,10 +10,13 @@ class Udp(Input):
     Creates events with the field 'data' set to the packet received.
 
     :param integer port: listening port
+    :param list allow_hosts: udp authorized clients or empty for disable
 
     Example::
 
         Udp(port=6000)
+        
+        Udp(port=6000, allow_hosts=['1.1.1.1', '192.168.1.1'])
     """
 
     def __init__(self, port, allow_hosts=[]):
