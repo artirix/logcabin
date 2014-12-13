@@ -161,3 +161,14 @@ Changelog
 0.1b2
 
 - Initial release
+
+TODO
+----
+
+- Add Dockerfile
+- Update documentation
+- Add samples
+- Add fail2ban filter file
+- MongoDB configuration
+- Add influxDB output
+- Add sample configuration for rsyslog and others syslog family
