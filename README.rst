@@ -165,6 +165,7 @@ Changelog
 TODO
 ----
 
+- New branch with gevent 1.0.1 and zmq 3
 - Add Dockerfile
 - Update documentation
 - Add samples
