@@ -178,5 +178,5 @@ TODO
    :alt: Build Status
 
 .. |Doc Status| image:: https://readthedocs.org/projects/logcabin-fork/badge/?version=latest
-        :target: https://readthedocs.org/projects/logcabin-fork/?badge=latest
-        :alt: Documentation Status        
+   :target: https://readthedocs.org/projects/logcabin-fork/?badge=latest
+   :alt: Documentation Status        
