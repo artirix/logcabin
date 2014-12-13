@@ -16,7 +16,7 @@ class Udp(Input):
         Udp(port=6000)
     """
 
-    def __init__(self, port):
+    def __init__(self, port, allow_hosts=[]):
         super(Udp, self).__init__()
         self.port = port
         self.sock = gevent.socket.socket(gevent.socket.AF_INET, gevent.socket.SOCK_DGRAM)
@@ -25,7 +25,13 @@ class Udp(Input):
 
     def _run(self):
         while True:
-            data = self.sock.recv(4096)
+            data, address = self.sock.recvfrom(4096)
+            if len(self.allow_hosts) > 0:
+                if not address[0] in self.allow_hosts:
+                    #fail2ban: failregex = reject host \[<HOST>\]
+                    self.logger.error("reject host [%s]" % address[0])
+                    #TODO: close sock ?
+                    continue
             self.logger.debug('Received: %r' % data)
             self.output.put(Event(data=data))
             gevent.sleep() # yield for other stages
