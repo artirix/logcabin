@@ -173,9 +173,10 @@ TODO
 - Add influxDB output
 - Add sample configuration for rsyslog and others syslog family
 
-.. |Build Status| .. image:: https://travis-ci.org/srault95/logcabin.svg?branch=master
-    :target: https://travis-ci.org/srault95/logcabin        
-        
+.. |Build Status| image:: https://travis-ci.org/srault95/logcabin.svg?branch=master
+   :target: https://travis-ci.org/srault95/logcabin
+   :alt: Build Status
+
 .. |Doc Status| image:: https://readthedocs.org/projects/logcabin-fork/badge/?version=latest
         :target: https://readthedocs.org/projects/logcabin-fork/?badge=latest
         :alt: Documentation Status        
