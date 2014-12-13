@@ -18,6 +18,7 @@ class Udp(Input):
 
     def __init__(self, port, allow_hosts=[]):
         super(Udp, self).__init__()
+        self.allow_hosts = allow_hosts or []
         self.port = port
         self.sock = gevent.socket.socket(gevent.socket.AF_INET, gevent.socket.SOCK_DGRAM)
         self.sock.setsockopt(gevent.socket.SOL_SOCKET, gevent.socket.SO_BROADCAST, 1)
