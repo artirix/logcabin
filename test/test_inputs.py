@@ -68,9 +68,20 @@ class UdpTests(InputTests):
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.sock.sendto('abc', ('', conf['port']))
 
-        # yield for processing to happen
         q = self.waitForQueue(events=0)
-        self.assertIsNone(q)
+        self.assertEqual(q, None)
+
+    def test_allow_hosts(self):
+        conf = {'port': random.randint(1024, 65535),
+                'allow_hosts': ['127.0.0.1']}
+        self.create(conf)
+
+        self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self.sock.sendto('abc', ('', conf['port']))
+
+        q = self.waitForQueue()
+        assertEventEquals(self, Event(data='abc'), q[0])
+
 
 class FileTests(InputTests):
     cls = fileinput.File
