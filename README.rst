@@ -1,8 +1,7 @@
 logcabin
 ========
 
-.. image:: https://travis-ci.org/artirix/logcabin.png?branch=master
-        :target: https://travis-ci.org/artirix/logcabin
+|Build Status| |Doc Status| 
 
 logcabin is a program for aggregating and processing events from a diverse range
 of sources and formats, and outputting to the file system, database or a search
@@ -173,3 +172,10 @@ TODO
 - MongoDB configuration
 - Add influxDB output
 - Add sample configuration for rsyslog and others syslog family
+
+.. |Build Status| .. image:: https://travis-ci.org/srault95/logcabin.svg?branch=master
+    :target: https://travis-ci.org/srault95/logcabin        
+        
+.. |Doc Status| image:: https://readthedocs.org/projects/logcabin-fork/badge/?version=latest
+        :target: https://readthedocs.org/projects/logcabin-fork/?badge=latest
+        :alt: Documentation Status        
