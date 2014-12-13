@@ -69,7 +69,7 @@ class UdpTests(InputTests):
         self.sock.sendto('abc', ('', conf['port']))
 
         # yield for processing to happen
-        q = self.waitForQueue()
+        q = self.waitForQueue(events=0)
         self.assertIsNone(q)
 
 class FileTests(InputTests):
