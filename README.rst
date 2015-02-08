@@ -1,7 +1,7 @@
 logcabin
 ========
 
-|Build Status| |Doc Status| 
+|Build Status| |Drone Build Status| |Doc Status| 
 
 logcabin is a program for aggregating and processing events from a diverse range
 of sources and formats, and outputting to the file system, database or a search
@@ -175,8 +175,12 @@ TODO
 
 .. |Build Status| image:: https://travis-ci.org/srault95/logcabin.svg?branch=master
    :target: https://travis-ci.org/srault95/logcabin
-   :alt: Build Status
+   :alt: Travis Build Status
 
 .. |Doc Status| image:: https://readthedocs.org/projects/logcabin-fork/badge/?version=latest
    :target: https://readthedocs.org/projects/logcabin-fork/?badge=latest
    :alt: Documentation Status        
+
+.. |Drone Build Status| image:: https://drone.io/github.com/srault95/logcabin/status.png
+   :target: https://drone.io/github.com/srault95/logcabin/latest
+   :alt: Drone Build Status
