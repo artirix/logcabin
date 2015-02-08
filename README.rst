@@ -1,8 +1,7 @@
 logcabin
 ========
 
-.. image:: https://travis-ci.org/artirix/logcabin.png?branch=master
-        :target: https://travis-ci.org/artirix/logcabin
+|Build Status| |Drone Build Status| |Doc Status| 
 
 logcabin is a program for aggregating and processing events from a diverse range
 of sources and formats, and outputting to the file system, database or a search
@@ -161,3 +160,27 @@ Changelog
 0.1b2
 
 - Initial release
+
+TODO
+----
+
+- New branch with gevent 1.0.1 and zmq 3
+- Add Dockerfile
+- Update documentation
+- Add samples
+- Add fail2ban filter file
+- MongoDB configuration
+- Add influxDB output
+- Add sample configuration for rsyslog and others syslog family
+
+.. |Build Status| image:: https://travis-ci.org/srault95/logcabin.svg?branch=master
+   :target: https://travis-ci.org/srault95/logcabin
+   :alt: Travis Build Status
+
+.. |Doc Status| image:: https://readthedocs.org/projects/logcabin-fork/badge/?version=latest
+   :target: https://readthedocs.org/projects/logcabin-fork/?badge=latest
+   :alt: Documentation Status        
+
+.. |Drone Build Status| image:: https://drone.io/github.com/srault95/logcabin/status.png
+   :target: https://drone.io/github.com/srault95/logcabin/latest
+   :alt: Drone Build Status

@@ -10,14 +10,18 @@ class Udp(Input):
     Creates events with the field 'data' set to the packet received.
 
     :param integer port: listening port
+    :param list allow_hosts: udp authorized clients or empty for disable
 
     Example::
 
         Udp(port=6000)
+        
+        Udp(port=6000, allow_hosts=['1.1.1.1', '192.168.1.1'])
     """
 
-    def __init__(self, port):
+    def __init__(self, port, allow_hosts=[]):
         super(Udp, self).__init__()
+        self.allow_hosts = allow_hosts or []
         self.port = port
         self.sock = gevent.socket.socket(gevent.socket.AF_INET, gevent.socket.SOCK_DGRAM)
         self.sock.setsockopt(gevent.socket.SOL_SOCKET, gevent.socket.SO_BROADCAST, 1)
@@ -25,7 +29,13 @@ class Udp(Input):
 
     def _run(self):
         while True:
-            data = self.sock.recv(4096)
+            data, address = self.sock.recvfrom(4096)
+            if len(self.allow_hosts) > 0:
+                if not address[0] in self.allow_hosts:
+                    #fail2ban: failregex = reject host \[<HOST>\]
+                    self.logger.error("reject host [%s]" % address[0])
+                    #TODO: close sock ?
+                    continue
             self.logger.debug('Received: %r' % data)
             self.output.put(Event(data=data))
             gevent.sleep() # yield for other stages
